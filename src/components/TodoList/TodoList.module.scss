@@ -1,0 +1,354 @@
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use '../../styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use '../../styles/mixins' as *;
+
+// Контейнер для состояний (загрузка, ошибка, пустой список)
+.stateContainer {
+  // Внутренние отступы (очень большие)
+  padding: $spacing-xxl;
+  // Выравнивание текста по центру
+  text-align: center;
+  // Минимальная высота для сохранения пространства
+  min-height: 300px;
+  // Flexbox для вертикального и горизонтального центрирования
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Применяем стеклянный эффект
+  @include glass;
+  // Применяем мягкую тень
+  & { @include soft-shadow; }
+}
+
+/* Стили для состояния загрузки (loading) */
+.loader { 
+  // Flexbox в колонку для центрирования элементов
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  // Расстояние между элементами
+  gap: $spacing-lg; 
+}
+
+// Спиннер загрузки
+.loaderSpinner {
+  // Размеры спиннера
+  width: 40px; 
+  height: 40px;
+  // Граница с прозрачностью 20% для светлой темы
+  border: 3px solid rgba($primary-light, 0.2);
+  // Верхняя граница основного цвета для создания эффекта спиннера
+  border-top: 3px solid $primary-light;
+  // Круглая форма
+  border-radius: 50%;
+  // Бесконечная анимация вращения
+  animation: spin 1s linear infinite;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Граница для темной темы
+    border-color: rgba($primary-dark, 0.2);
+    // Верхняя граница для темной темы
+    border-top-color: $primary-dark;
+  }
+  // Для пользователей с reduced motion
+  @media (prefers-reduced-motion: reduce) { 
+    // Отключаем анимацию
+    animation: none; 
+    // Уменьшаем непрозрачность
+    opacity: .7; 
+  }
+}
+
+// Текст состояния загрузки
+.loaderText { 
+  // Размер шрифта
+  font-size: 1rem; 
+  // Средняя жирность
+  font-weight: 500; 
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark; 
+  } 
+}
+
+/* Стили для состояния ошибки (error) */
+.error { 
+  // Flexbox в колонку для центрирования
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  // Расстояние между элементами
+  gap: $spacing-md; 
+  // Максимальная ширина для читаемости
+  max-width: 400px; 
+}
+
+// Иконка ошибки (эмодзи)
+.errorIcon { 
+  // Крупный размер шрифта
+  font-size: 3rem; 
+  // Внешний отступ снизу
+  margin-bottom: $spacing-sm; 
+}
+
+// Заголовок ошибки
+.errorTitle { 
+  // Размер шрифта
+  font-size: 1.25rem; 
+  // Жирность шрифта
+  font-weight: 600; 
+  // Цвет текста ошибки для светлой темы
+  color: $error-light; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста ошибки для темной темы
+    color: $error-dark; 
+  } 
+}
+
+// Сообщение об ошибке
+.errorMessage { 
+  // Размер шрифта (0.875rem = 14px)
+  font-size: .875rem; 
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light; 
+  // Высота строки
+  line-height: 1.5; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark; 
+  } 
+}
+
+// Кнопка повторной попытки
+.errorButton {
+  // Внутренние отступы
+  padding: $spacing-sm $spacing-lg;
+  // Граница с прозрачностью 30%
+  border: 1px solid rgba($error-light, 0.3);
+  // Скругление углов
+  border-radius: $radius-md;
+  // Фон с прозрачностью 10%
+  background: rgba($error-light, 0.1);
+  // Цвет текста
+  color: $error-light;
+  // Средняя жирность шрифта
+  font-weight: 500;
+  // Курсор в виде указателя
+  cursor: pointer;
+  // Плавный переход для всех свойств
+  transition: all 0.2s ease;
+
+  // Применяем стеклянный эффект
+  @include glass;
+  // Применяем эффект фокусного кольца (доступность)
+  & { @include focus-ring; }
+  // Применяем мягкую тень
+  & { @include soft-shadow; }
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Граница для темной темы
+    border-color: rgba($error-dark, 0.3);
+    // Фон для темной темы
+    background: rgba($error-dark, 0.1);
+    // Цвет текста для темной темы
+    color: $error-dark;
+  }
+
+  // Стили при наведении
+  &:hover {
+    // Более насыщенный фон при наведении
+    background: rgba($error-light, 0.2);
+    // Легкое смещение вверх
+    transform: translateY(-2px);
+    // Тень при наведении для светлой темы
+    box-shadow: $shadow-lg-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Фон для темной темы
+      background: rgba($error-dark, 0.2);
+      // Тень для темной темы
+      box-shadow: $shadow-lg-dark;
+    }
+  }
+
+  // Стили при активации (нажатии)
+  &:active { 
+    // Возвращаем на место при нажатии
+    transform: translateY(0); 
+  }
+}
+
+/* Стили для пустого состояния (empty) */
+.empty { 
+  // Flexbox в колонку для центрирования
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  // Расстояние между элементами
+  gap: $spacing-md; 
+  // Максимальная ширина для читаемости
+  max-width: 400px; 
+}
+
+// Иконка пустого состояния (эмодзи)
+.emptyIcon { 
+  // Очень крупный размер шрифта
+  font-size: 4rem; 
+  // Полупрозрачность
+  opacity: .5; 
+  // Внешний отступ снизу
+  margin-bottom: $spacing-sm; 
+}
+
+// Заголовок пустого состояния
+.emptyTitle { 
+  // Размер шрифта
+  font-size: 1.25rem; 
+  // Жирность шрифта
+  font-weight: 600; 
+  // Цвет текста для светлой темы
+  color: $text-primary-light; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы
+    color: $text-primary-dark; 
+  } 
+}
+
+// Сообщение пустого состояния
+.emptyMessage { 
+  // Размер шрифта (0.875rem = 14px)
+  font-size: .875rem; 
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light; 
+  // Высота строки
+  line-height: 1.5; 
+  // Выравнивание текста по центру
+  text-align: center; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark; 
+  } 
+}
+
+/* Стили для нормального состояния со списком задач (list) */
+.todoList {
+  // Анимация плавного появления снизу
+  animation: fadeInUp .6s ease-out;
+  // Для пользователей с reduced motion
+  @media (prefers-reduced-motion: reduce) { 
+    // Отключаем анимацию
+    animation: none; 
+  }
+}
+
+// Шапка списка задач
+.header { 
+  // Внешний отступ снизу
+  margin-bottom: $spacing-lg; 
+}
+
+// Заголовок списка задач
+.title { 
+  // Размер шрифта (1.125rem = 18px)
+  font-size: 1.125rem; 
+  // Жирность шрифта
+  font-weight: 600; 
+  // Цвет текста для светлой темы
+  color: $text-primary-light; 
+  // Убираем внешние отступы
+  margin: 0;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы
+    color: $text-primary-dark; 
+  } 
+}
+
+// Счетчик задач (число)
+.count { 
+  // Цвет для светлой темы (акцентный)
+  color: $primary-light; 
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет для темной темы (акцентный)
+    color: $primary-dark; 
+  } 
+}
+
+// Сетка для карточек задач
+.grid {
+  // Grid layout для адаптивного расположения
+  display: grid;
+  // Расстояние между элементами сетки
+  gap: $spacing-md;
+  // Автозаполнение с минимальной шириной 300px
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+  // Для мобильных устройств (максимальная ширина 640px)
+  @media (max-width: 640px) { 
+    // Одна колонка на маленьких экранах
+    grid-template-columns: 1fr; 
+    // Уменьшенное расстояние между элементами
+    gap: $spacing-sm; 
+  }
+  // Для больших экранов (минимальная ширина 1400px)
+  @media (min-width: 1400px) { 
+    // Увеличенная минимальная ширина карточек
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+  }
+}
+
+// Keyframes анимации вращения для спиннера
+@keyframes spin { 
+  // Конечное состояние - полный оборот
+  to { 
+    transform: rotate(360deg); 
+  } 
+}
+
+// Keyframes анимации плавного появления снизу
+@keyframes fadeInUp { 
+  // Начальное состояние
+  from { 
+    // Полная прозрачность
+    opacity: 0; 
+    // Смещение вниз на 20px
+    transform: translateY(20px); 
+  } 
+  // Конечное состояние
+  to { 
+    // Полная непрозрачность
+    opacity: 1; 
+    // Нормальное положение
+    transform: translateY(0); 
+  } 
+}
+
+
+
+
+
+
+

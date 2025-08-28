@@ -1,0 +1,374 @@
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use '../../styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use '../../styles/mixins' as *;
+
+// Основной контейнер компонента Controls
+.controls {
+  // Внешний отступ снизу для разделения от следующих элементов
+  margin-bottom: $spacing-xl;
+
+  // Применяем стеклянный эффект (миксин glass)
+  @include glass;
+  // Применяем мягкую тень (миксин soft-shadow)
+  & { @include soft-shadow; }
+}
+
+// Внутренний контейнер для элементов управления
+.container {
+  // Внутренние отступы
+  padding: $spacing-lg;
+  // Используем grid для расположения элементов
+  display: grid;
+  // Расстояние между grid-элементами
+  gap: $spacing-lg;
+
+  // Медиа-запрос для планшетов и выше (ширина от 768px)
+  @media (min-width: 768px) {
+    // Создаем 3 колонки с соотношением ширины 1:2:1
+    grid-template-columns: 1fr 2fr 1fr;
+    // Выравниваем элементы по началу (вертикально)
+    align-items: start;
+  }
+}
+
+// Группа фильтров
+.filterGroup { 
+  // Используем flexbox для расположения элементов
+  display: flex; 
+  // Располагаем элементы в колонку (вертикально)
+  flex-direction: column; 
+  // Расстояние между элементами
+  gap: $spacing-sm; 
+}
+
+// Стили для текстовых меток (лейблов) и легенд fieldset
+.label,
+.legend {
+  // Размер шрифта (0.875rem = 14px)
+  font-size: 0.875rem;
+  // Жирность шрифта
+  font-weight: 600;
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+  // Убираем внешние отступы
+  margin: 0;
+
+  // Медиа-запрос для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы
+    color: $text-primary-dark; 
+  }
+}
+
+// Стили для fieldset (группы элементов формы)
+.fieldset { 
+  // Убираем стандартную границу
+  border: none; 
+  // Убираем внутренние отступы
+  padding: 0; 
+  // Убираем внешние отступы
+  margin: 0; 
+}
+
+// Стили для выпадающего списка (select)
+.select {
+  /* ДЕКЛАРАЦИИ */
+  // Внутренние отступы
+  padding: $spacing-sm $spacing-md;
+  // Граница с прозрачностью 30%
+  border: 1px solid rgba($border-light, 0.3);
+  // Скругление углов
+  border-radius: $radius-md;
+  // Размер шрифта
+  font-size: 0.875rem;
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+  // Фон с прозрачностью 80%
+  background: rgba($surface-light, 0.8);
+  // Курсор в виде указателя (интерактивный элемент)
+  cursor: pointer;
+  // Плавный переход для всех свойств
+  transition: all 0.2s ease;
+
+  /* МИКСИНЫ */
+  // Применяем стеклянный эффект
+  @include glass;
+  // Применяем эффект фокусного кольца (для доступности)
+  & { @include focus-ring; }
+
+  // Стили для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Граница для темной темы
+    border-color: rgba($border-dark, 0.3);
+    // Цвет текста для темной темы
+    color: $text-primary-dark;
+    // Фон для темной темы
+    background: rgba($surface-dark, 0.8);
+  }
+
+  // Стили при наведении курсора
+  &:hover {
+    // Изменяем цвет границы при наведении
+    border-color: rgba($primary-light, 0.5);
+    // Легкое смещение вверх для эффекта поднятия
+    transform: translateY(-1px);
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      border-color: rgba($primary-dark, 0.5); 
+    }
+  }
+
+  // Стили при фокусе (когда элемент выбран с клавиатуры)
+  &:focus {
+    // Цвет границы при фокусе
+    border-color: $primary-light;
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      border-color: $primary-dark; 
+    }
+  }
+}
+
+// Контейнер для сегментированного контроля (радиокнопок в виде кнопок)
+.segmentedControl {
+  // Flexbox для горизонтального расположения
+  display: flex;
+  // Скругление углов контейнера
+  border-radius: $radius-lg;
+  // Внутренние отступы
+  padding: $spacing-xs;
+  // Граница с прозрачностью 20%
+  border: 1px solid rgba($border-light, 0.2);
+
+  // Применяем стеклянный эффект
+  @include glass;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    border-color: rgba($border-dark, 0.2); 
+  }
+}
+
+// Элемент сегментированного контроля
+.segmentedItem {
+  // Равномерное заполнение пространства
+  flex: 1;
+  // Позиционирование для дочерних элементов
+  position: relative;
+  // Курсор в виде указателя
+  cursor: pointer;
+  // Скругление углов
+  border-radius: $radius-md;
+  // Плавный переход
+  transition: all 0.2s ease;
+
+  // Стили при наведении
+  &:hover {
+    // Фон при наведении с прозрачностью 10%
+    background: rgba($primary-light, 0.1);
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      background: rgba($primary-dark, 0.1); 
+    }
+  }
+
+  // Стили для активного (выбранного) элемента
+  &.active {
+    // Фон активного элемента
+    background: $primary-light;
+    // Цвет текста
+    color: #fff;
+    // Легкое увеличение
+    transform: scale(1.02);
+
+    // Применяем мягкую тень
+    & { @include soft-shadow; }
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      background: $primary-dark; 
+    }
+    // Стили для текста внутри активного элемента
+    .segmentedLabel { 
+      color: #fff; 
+      font-weight: 600; 
+    }
+  }
+}
+
+// Скрытый input для сегментированного контроля
+.segmentedInput {
+  // Абсолютное позиционирование (скрываем визуально)
+  position: absolute; 
+  // Полная прозрачность
+  opacity: 0; 
+  // Отключаем события мыши (обрабатываем на label)
+  pointer-events: none;
+  // Стили для фокуса (доступность)
+  &:focus-visible + .segmentedLabel { 
+    & { @include focus-ring; } 
+  }
+}
+
+// Видимая часть сегментированного контроля (текст)
+.segmentedLabel {
+  // Блочное отображение
+  display: block;
+  // Внутренние отступы
+  padding: $spacing-sm $spacing-md;
+  // Выравнивание текста по центру
+  text-align: center;
+  // Размер шрифта (0.75rem = 12px)
+  font-size: 0.75rem;
+  // Жирность шрифта
+  font-weight: 500;
+  // Цвет текста для светлой темы
+  color: $text-secondary-light;
+  // Скругление углов
+  border-radius: $radius-md;
+  // Плавный переход
+  transition: all 0.2s ease;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    color: $text-secondary-dark; 
+  }
+}
+
+// Контейнер для группы радиокнопок
+.radioGroup { 
+  // Flexbox в колонку
+  display: flex; 
+  flex-direction: column; 
+  // Расстояние между элементами
+  gap: $spacing-sm; 
+}
+
+// Лейбл для радиокнопки
+.radioLabel {
+  // Flexbox для горизонтального расположения
+  display: flex; 
+  // Выравнивание по центру по вертикали
+  align-items: center; 
+  // Расстояние между элементами
+  gap: $spacing-sm;
+  // Курсор в виде указателя
+  cursor: pointer; 
+  // Внутренние отступы
+  padding: $spacing-xs $spacing-sm;
+  // Скругление углов
+  border-radius: $radius-md; 
+  // Плавный переход только для фона
+  transition: background-color 0.2s ease;
+
+  // Стили при наведении
+  &:hover {
+    // Фон при наведении с прозрачностью 5%
+    background: rgba($primary-light, 0.05);
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      background: rgba($primary-dark, 0.05); 
+    }
+  }
+}
+
+// Скрытый input типа radio
+.radioInput {
+  // Абсолютное позиционирование (скрываем визуально)
+  position: absolute; 
+  // Полная прозрачность
+  opacity: 0; 
+  // Отключаем события мыши
+  pointer-events: none;
+  // Стили для фокуса (доступность) - применяем к кастомному элементу
+  &:focus-visible + .radioCustom { 
+    & { @include focus-ring; } 
+  }
+}
+
+// Кастомный визуальный элемент радиокнопки
+.radioCustom {
+  // Размеры элемента
+  width: 18px; 
+  height: 18px; 
+  // Граница с прозрачностью 40%
+  border: 2px solid rgba($border-light, 0.4);
+  // Круглая форма
+  border-radius: 50%; 
+  // Позиционирование для псевдоэлемента
+  position: relative; 
+  // Плавный переход
+  transition: all 0.2s ease;
+  // Фон с прозрачностью 80%
+  background: rgba($surface-light, 0.8);
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Граница для темной темы
+    border-color: rgba($border-dark, 0.4);
+    // Фон для темной темы
+    background: rgba($surface-dark, 0.8);
+  }
+
+  // Псевдоэлемент для внутреннего кружка (выбранное состояние)
+  &::after {
+    // Обязательное свойство для псевдоэлемента
+    content: ''; 
+    // Абсолютное позиционирование
+    position: absolute; 
+    // Позиционирование по центру
+    top: 50%; 
+    left: 50%;
+    // Центрирование и начальный масштаб 0 (скрыт)
+    transform: translate(-50%, -50%) scale(0);
+    // Размер внутреннего кружка
+    width: 8px; 
+    height: 8px; 
+    // Цвет заполнения
+    background: $primary-light; 
+    // Круглая форма
+    border-radius: 50%;
+    // Плавная анимация появления
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      background: $primary-dark; 
+    }
+  }
+
+  // Стили когда радиокнопка выбрана
+  .radioInput:checked + & {
+    // Цвет границы при выборе
+    border-color: $primary-light; 
+    // Фон при выборе с прозрачностью 10%
+    background: rgba($primary-light, 0.1);
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      border-color: $primary-dark; 
+      background: rgba($primary-dark, 0.1);
+    }
+    // Показываем внутренний кружок
+    &::after { 
+      transform: translate(-50%, -50%) scale(1); 
+    }
+  }
+}
+
+// Текст рядом с радиокнопкой
+.radioText {
+  // Размер шрифта
+  font-size: 0.875rem;
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    color: $text-primary-dark; 
+  }
+}
+
+
+
+
+

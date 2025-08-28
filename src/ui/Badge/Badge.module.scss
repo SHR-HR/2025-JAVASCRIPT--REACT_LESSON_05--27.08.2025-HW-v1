@@ -1,0 +1,214 @@
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use '../../styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use '../../styles/mixins' as *;
+
+// Базовый класс для компонента Badge
+.badge {
+  // Flexbox для центрирования содержимого
+  display: inline-flex;
+  // Вертикальное выравнивание по центру
+  align-items: center;
+  // Горизонтальное выравнивание по центру
+  justify-content: center;
+  // Жирность шрифта
+  font-weight: 600;
+  // Полное скругление углов (круглая форма)
+  border-radius: $radius-full;
+  // Запрет переноса текста на новую строку
+  white-space: nowrap;
+  
+  // Glass эффект для бейджа (размытие фона)
+  // Для современных браузеров
+  backdrop-filter: blur(10px);
+  // Для Safari и WebKit-браузеров
+  -webkit-backdrop-filter: blur(10px);
+  
+  // Граница толщиной 1px (цвет будет задан в вариантах)
+  border: 1px solid;
+  
+  // Плавные переходы для всех свойств с пользовательской timing-функцией
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Эффект при наведении курсора
+  &:hover {
+    // Увеличение масштаба на 5%
+    transform: scale(1.05);
+  }
+
+  // === РАЗМЕРЫ БЕЙДЖЕЙ ===
+  
+  // Маленький размер (sm)
+  &.sm {
+    // Внутренние отступы: очень маленький сверху/снизу, маленький слева/справа
+    padding: $spacing-xs $spacing-sm;
+    // Очень маленький размер шрифта
+    font-size: 0.65rem;
+  }
+
+  // Средний размер (md) - по умолчанию
+  &.md {
+    // Внутренние отступы: маленький сверху/снизу, средний слева/справа
+    padding: $spacing-sm $spacing-md;
+    // Маленький размер шрифта
+    font-size: 0.75rem;
+  }
+
+  // Большой размер (lg)
+  &.lg {
+    // Внутренние отступы: средний сверху/снизу, большой слева/справа
+    padding: $spacing-md $spacing-lg;
+    // Средний размер шрифта
+    font-size: 0.875rem;
+  }
+
+  // === ВАРИАНТЫ ЦВЕТОВ ===
+  
+  // Primary вариант (синий) - основной
+  &.primary {
+    // Фон с прозрачностью 15% для светлой темы
+    background: rgba($primary-light, 0.15);
+    // Граница с прозрачностью 30% для светлой темы
+    border-color: rgba($primary-light, 0.3);
+    // Цвет текста для светлой темы
+    color: $primary-light;
+    
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Фон с прозрачностью 15% для темной темы
+      background: rgba($primary-dark, 0.15);
+      // Граница с прозрачностью 30% для темной темы
+      border-color: rgba($primary-dark, 0.3);
+      // Цвет текста для темной темы
+      color: $primary-dark;
+    }
+
+    // Эффект при наведении для primary варианта
+    &:hover {
+      // Более насыщенный фон при наведении (25%)
+      background: rgba($primary-light, 0.25);
+      // Более насыщенная граница при наведении (50%)
+      border-color: rgba($primary-light, 0.5);
+      
+      // Для темной темы
+      @media (prefers-color-scheme: dark) {
+        // Фон для темной темы при наведении
+        background: rgba($primary-dark, 0.25);
+        // Граница для темной темы при наведении
+        border-color: rgba($primary-dark, 0.5);
+      }
+    }
+  }
+
+  // Success вариант (зеленый) - для успешных операций
+  &.success {
+    // Фон с прозрачностью 15% для светлой темы
+    background: rgba($success-light, 0.15);
+    // Граница с прозрачностью 30% для светлой темы
+    border-color: rgba($success-light, 0.3);
+    // Цвет текста для светлой темы
+    color: $success-light;
+    
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Фон с прозрачностью 15% для темной темы
+      background: rgba($success-dark, 0.15);
+      // Граница с прозрачностью 30% для темной темы
+      border-color: rgba($success-dark, 0.3);
+      // Цвет текста для темной темы
+      color: $success-dark;
+    }
+
+    // Эффект при наведении для success варианта
+    &:hover {
+      // Более насыщенный фон при наведении
+      background: rgba($success-light, 0.25);
+      // Более насыщенная граница при наведении
+      border-color: rgba($success-light, 0.5);
+      
+      // Для темной темы
+      @media (prefers-color-scheme: dark) {
+        // Фон для темной темы при наведении
+        background: rgba($success-dark, 0.25);
+        // Граница для темной темы при наведении
+        border-color: rgba($success-dark, 0.5);
+      }
+    }
+  }
+
+  // Warning вариант (оранжевый) - для предупреждений
+  &.warning {
+    // Фон с прозрачностью 15% для светлой темы
+    background: rgba($warning-light, 0.15);
+    // Граница с прозрачностью 30% для светлой темы
+    border-color: rgba($warning-light, 0.3);
+    // Цвет текста для светлой темы
+    color: $warning-light;
+    
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Фон с прозрачностью 15% для темной темы
+      background: rgba($warning-dark, 0.15);
+      // Граница с прозрачностью 30% для темной темы
+      border-color: rgba($warning-dark, 0.3);
+      // Цвет текста для темной темы
+      color: $warning-dark;
+    }
+
+    // Эффект при наведении для warning варианта
+    &:hover {
+      // Более насыщенный фон при наведении
+      background: rgba($warning-light, 0.25);
+      // Более насыщенная граница при наведении
+      border-color: rgba($warning-light, 0.5);
+      
+      // Для темной темы
+      @media (prefers-color-scheme: dark) {
+        // Фон для темной темы при наведении
+        background: rgba($warning-dark, 0.25);
+        // Граница для темной темы при наведении
+        border-color: rgba($warning-dark, 0.5);
+      }
+    }
+  }
+
+  // Error вариант (красный) - для ошибок
+  &.error {
+    // Фон с прозрачностью 15% для светлой темы
+    background: rgba($error-light, 0.15);
+    // Граница с прозрачностью 30% для светлой темы
+    border-color: rgba($error-light, 0.3);
+    // Цвет текста для светлой темы
+    color: $error-light;
+    
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Фон с прозрачностью 15% для темной темы
+      background: rgba($error-dark, 0.15);
+      // Граница с прозрачностью 30% для темной темы
+      border-color: rgba($error-dark, 0.3);
+      // Цвет текста для темной темы
+      color: $error-dark;
+    }
+
+    // Эффект при наведении для error варианта
+    &:hover {
+      // Более насыщенный фон при наведении
+      background: rgba($error-light, 0.25);
+      // Более насыщенная граница при наведении
+      border-color: rgba($error-light, 0.5);
+      
+      // Для темной темы
+      @media (prefers-color-scheme: dark) {
+        // Фон для темной темы при наведении
+        background: rgba($error-dark, 0.25);
+        // Граница для темной темы при наведении
+        border-color: rgba($error-dark, 0.5);
+      }
+    }
+  }
+}
+
+
+
+

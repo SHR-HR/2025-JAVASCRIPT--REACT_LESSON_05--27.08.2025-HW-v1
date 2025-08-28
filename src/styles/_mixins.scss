@@ -1,0 +1,314 @@
+// Импортируем файл с токенами (переменными) для использования в миксинах
+@use 'tokens' as *;
+
+/**
+ * SCSS Mixins - Переиспользуемые стили
+ * Коллекция миксинов для единообразного стилизации компонентов
+ */
+
+/* === FOCUS RING === (Кольцо фокуса для доступности) */
+@mixin focus-ring {
+  // Прозрачная outline для сохранения пространства
+  outline: 2px solid transparent;
+  // Отступ outline от элемента
+  outline-offset: 2px;
+  // Двойная тень для создания эффекта кольца фокуса для светлой темы
+  box-shadow:
+    0 0 0 2px rgba($primary-light, 0.2),
+    0 0 0 4px rgba($primary-light, 0.3);
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Двойная тень для темной темы
+    box-shadow:
+      0 0 0 2px rgba($primary-dark, 0.2),
+      0 0 0 4px rgba($primary-dark, 0.3);
+  }
+}
+
+/* === GLASS ЭФФЕКТ === (Стеклянный эффект) */
+/* ВНИМАНИЕ: все декларации – до @media, чтобы не ловить mixed-decls */
+@mixin glass {
+  // Относительное позиционирование для псевдоэлементов
+  position: relative; /* перенесено выше @media */
+  // Фон с прозрачностью для светлой темы
+  background: rgba($surface-light, 0.8);
+  // Размытие фона (для современных браузеров)
+  backdrop-filter: blur(20px);
+  // Размытие фона (для Safari и WebKit-браузеров)
+  -webkit-backdrop-filter: blur(20px);
+  // Граница с прозрачностью для светлой темы
+  border: 1px solid rgba($border-light, 0.2);
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Фон с прозрачностью для темной темы
+    background: rgba($surface-dark, 0.8);
+    // Граница для темной темы
+    border-color: rgba($border-dark, 0.2);
+  }
+
+  /* Overlay (Наложение градиента) */
+  &::before {
+    // Обязательное свойство для псевдоэлемента
+    content: '';
+    // Абсолютное позиционирование
+    position: absolute;
+    // Растягиваем на весь родительский элемент
+    inset: 0;
+    // Градиентное наложение для светлой темы
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    // Наследуем скругление углов родителя
+    border-radius: inherit;
+    // Отключаем события мыши
+    pointer-events: none;
+    // Отправляем под основной контент
+    z-index: -1;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Градиентное наложение для темной темы
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.01) 100%
+      );
+    }
+  }
+}
+
+/* === ГРАДИЕНТНАЯ ГРАНИЦА === */
+@mixin gradient-border($radius: $radius-lg) {
+  // Относительное позиционирование для псевдоэлемента
+  position: relative;
+  // Скругление углов
+  border-radius: $radius;
+
+  // Псевдоэлемент для градиентной границы
+  &::after {
+    // Обязательное свойство для псевдоэлемента
+    content: '';
+    // Абсолютное позиционирование
+    position: absolute;
+    // Растягиваем на весь родительский элемент
+    inset: 0;
+    // Градиент для границы (светлая тема)
+    background: $gradient-border-light;
+    // Скругление углов
+    border-radius: $radius;
+    // Толщина границы через padding
+    padding: 1px;
+    // Создание маски для градиентной границы
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    // Исключающее наложение масок
+    mask-composite: exclude;
+    // Отключаем события мыши
+    pointer-events: none;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Градиент для границы (темная тема)
+      background: $gradient-border-dark;
+    }
+  }
+}
+
+/* === МЯГКАЯ ТЕНЬ === */
+@mixin soft-shadow {
+  // Тень для стеклянных элементов (светлая тема)
+  box-shadow: $shadow-glass-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Тень для стеклянных элементов (темная тема)
+    box-shadow: $shadow-glass-dark;
+  }
+}
+
+/* === КОНТЕЙНЕР === (Центрирующий контейнер) */
+@mixin container {
+  // Ширина 100% доступного пространства
+  width: 100%;
+  // Максимальная ширина контейнера
+  max-width: $container-xl;
+  // Центрирование по горизонтали
+  margin-inline: auto;
+  // Внутренние отступы по горизонтали
+  padding-inline: $spacing-md;
+
+  // Для планшетов и выше
+  @media (min-width: $breakpoint-sm) {
+    // Увеличенные внутренние отступы
+    padding-inline: $spacing-lg;
+  }
+  // Для очень больших экранов
+  @media (min-width: $breakpoint-2xl) {
+    // Увеличенная максимальная ширина
+    max-width: $container-2xl;
+  }
+}
+
+/* === ВИЗУАЛЬНО СКРЫТЫЙ === (Для скрытия элементов с сохранением доступности) */
+@mixin visually-hidden {
+  // Абсолютное позиционирование
+  position: absolute !important;
+  // Минимальные размеры
+  width: 1px !important;
+  height: 1px !important;
+  // Убираем отступы
+  padding: 0 !important;
+  margin: -1px !important;
+  // Скрываем переполнение
+  overflow: hidden !important;
+  // Обрезаем элемент
+  clip: rect(0, 0, 0, 0) !important;
+  // Запрещаем перенос текста
+  white-space: nowrap !important;
+  // Убираем границу
+  border: 0 !important;
+}
+
+/* === TRUNCATE TEXT === (Обрезание текста с многоточием) */
+@mixin truncate {
+  // Скрываем переполнение
+  overflow: hidden;
+  // Добавляем многоточие в конце
+  text-overflow: ellipsis;
+  // Запрещаем перенос текста
+  white-space: nowrap;
+}
+
+/* === АНИМАЦИЯ ПОЯВЛЕНИЯ === (Плавное появление) */
+@mixin fade-in($duration: $duration-normal, $delay: 0s) {
+  // Начальная прозрачность
+  opacity: 0;
+  // Применяем анимацию fadeIn
+  animation: fadeIn $duration $ease-out $delay forwards;
+
+  // Для пользователей с reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    // Немедленно показываем элемент
+    opacity: 1;
+    // Отключаем анимацию
+    animation: none;
+  }
+}
+
+// Keyframes анимации плавного появления
+@keyframes fadeIn {
+  // Конечное состояние - полная непрозрачность
+  to { opacity: 1; }
+}
+
+/* === HOVER LIFT === (Эффект поднятия при наведении) */
+@mixin hover-lift {
+  // Плавный переход для трансформации и тени
+  transition: transform $duration-normal $ease-out, box-shadow $duration-normal $ease-out;
+
+  // Стили при наведении
+  &:hover {
+    // Поднимаем элемент на 4px
+    transform: translateY(-4px);
+    // Увеличиваем тень для светлой темы
+    box-shadow: $shadow-lg-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Увеличиваем тень для темной темы
+      box-shadow: $shadow-lg-dark;
+    }
+  }
+
+  // Стили при активации (нажатии)
+  &:active { 
+    // Опускаем элемент на 2px
+    transform: translateY(-2px); 
+  }
+}
+
+/* === RESPONSIVE TEXT === (Адаптивный текст) */
+@mixin responsive-text($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
+  // Функция clamp для адаптивного размера текста
+  font-size: clamp(#{$min-size}, #{percentage(($max-size - $min-size) / ($max-width - $min-width))} + #{$min-size}, #{$max-size});
+}
+
+/* === GRID AUTO FIT === (Адаптивная grid-сетка) */
+@mixin grid-auto-fit($min-width: 250px, $gap: $spacing-md) {
+  // Grid layout
+  display: grid;
+  // Автоподбор колонок с минимальной шириной
+  grid-template-columns: repeat(auto-fit, minmax(#{$min-width}, 1fr));
+  // Расстояние между элементами
+  gap: $gap;
+}
+
+/* === СТЕКЛЯННАЯ КНОПКА === */
+@mixin glass-button {
+  // Внутренние отступы
+  padding: $spacing-sm $spacing-lg;
+  // Скругление углов
+  border-radius: $radius-md;
+  // Жирность шрифта
+  font-weight: $font-medium;
+  // Курсор в виде указателя
+  cursor: pointer;
+  // Плавный переход для всех свойств
+  transition: all $duration-normal $ease-out;
+
+  // Применяем стеклянный эффект
+  @include glass;
+  // Применяем кольцо фокуса
+  @include focus-ring;
+  // Применяем эффект поднятия при наведении
+  @include hover-lift;
+
+  // Стили для disabled состояния
+  &:disabled {
+    // Полупрозрачность
+    opacity: 0.5;
+    // Курсор "недоступно"
+    cursor: not-allowed;
+    // Отключаем трансформацию
+    transform: none;
+    // Убираем тень
+    box-shadow: none;
+  }
+}
+
+/* === АНИМАЦИЯ СКЕЛЕТОНА === (Для состояния загрузки) */
+@mixin skeleton {
+  // Градиентный фон для анимации скелетона (светлая тема)
+  background: linear-gradient(90deg, rgba($gray-200, 0.8) 0%, rgba($gray-300, 0.8) 50%, rgba($gray-200, 0.8) 100%);
+  // Размер градиента для анимации
+  background-size: 200% 100%;
+  // Бесконечная анимация движения градиента
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Градиентный фон для темной темы
+    background: linear-gradient(90deg, rgba($dark-200, 0.8) 0%, rgba($dark-300, 0.8) 50%, rgba($dark-200, 0.8) 100%);
+  }
+
+  // Для пользователей с reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    // Отключаем анимацию
+    animation: none;
+  }
+}
+
+// Keyframes анимации загрузки скелетона
+@keyframes skeleton-loading {
+  // Начальное положение градиента
+  0% { background-position: 200% 0; }
+  // Конечное положение градиента
+  100% { background-position: -200% 0; }
+}
+
+
+
+

@@ -1,0 +1,189 @@
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use '../../styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use '../../styles/mixins' as *;
+
+// Основной контейнер компонента Header
+.header {
+  // Фиксированное позиционирование при прокрутке (прилипает к верху)
+  position: sticky; 
+  // Прилипание к верху экрана
+  top: 0; 
+  // z-index для управления слоями (чтобы header был поверх другого контента)
+  z-index: $z-header; 
+  // Ширина на всю доступную область
+  width: 100%;
+  // Плавный переход для всех свойств с пользовательской timing-функцией
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // Фоновый цвет для светлой темы с прозрачностью 80%
+  background: rgba($glass-bg-light, 0.8);
+
+  // Медиа-запрос для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Фоновый цвет для темной темы с прозрачностью 80%
+    background: rgba($glass-bg-dark, 0.8); 
+  }
+
+  // Стили для состояния когда страница прокручена (scrolled)
+  &.scrolled {
+    // Эффект размытия фона (для современных браузеров)
+    backdrop-filter: blur(20px);
+    // Эффект размытия фона (для Safari и WebKit-браузеров)
+    -webkit-backdrop-filter: blur(20px);
+    // Нижняя граница толщиной 1px
+    border-bottom: 1px solid;
+    // Градиентная граница для светлой темы
+    border-image: $gradient-border-light;
+    // Определение срезов для градиентной границы
+    border-image-slice: 1;
+    // Применяем мягкую тень (миксин soft-shadow)
+    @include soft-shadow;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) { 
+      // Градиентная граница для темной темы
+      border-image: $gradient-border-dark; 
+    }
+  }
+
+  // Стили для состояния когда страница НЕ прокручена
+  &:not(.scrolled) { 
+    // Прозрачная граница (чтобы не было резкого появления)
+    border-bottom: 1px solid transparent; 
+  }
+}
+
+// Контейнер для центрирования содержимого
+.container { 
+  // Применяем миксин container для стандартных отступов и центрирования
+  @include container; 
+}
+
+// Обертка для содержимого заголовка
+.content {
+  /* transition – до вложенных правил */
+  // Плавный переход для внутренних отступов
+  transition: padding 0.3s ease;
+  // Внутренние отступы: большой сверху/снизу, средний слева/справа
+  padding: $spacing-lg $spacing-md;
+  // Выравнивание текста по центру
+  text-align: center;
+
+  // Стили для контента когда header в состоянии scrolled
+  .header.scrolled & { 
+    // Уменьшенные внутренние отступы
+    padding: $spacing-md $spacing-md; 
+  }
+}
+
+// Стили для основного заголовка
+.title {
+  /* transition – ДО @media */
+  // Плавный переход для размера шрифта
+  transition: font-size 0.3s ease;
+
+  // Адаптивный размер шрифта с clamp (минимальный, предпочтительный, максимальный)
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  // Жирность шрифта
+  font-weight: 700; 
+  // Высота строки
+  line-height: 1.2;
+  // Внешние отступы: снизу маленький, остальные 0
+  margin: 0 0 $spacing-xs 0;
+
+  // Градиентный текст для светлой темы
+  background: $gradient-text-light;
+  // Обрезка фона по тексту (для градиентного текста)
+  background-clip: text; 
+  // Обрезка фона по тексту (для WebKit-браузеров)
+  -webkit-background-clip: text; 
+  // Прозрачный цвет текста (чтобы был виден градиент)
+  -webkit-text-fill-color: transparent;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Градиентный текст для темной темы
+    background: $gradient-text-dark;
+    // Обрезка фона по тексту
+    background-clip: text; 
+    // Обрезка фона по тексту (для WebKit)
+    -webkit-background-clip: text; 
+    // Прозрачный цвет текста
+    -webkit-text-fill-color: transparent;
+  }
+
+  // Стили для заголовка когда header в состоянии scrolled
+  .header.scrolled & { 
+    // Уменьшенный адаптивный размер шрифта
+    font-size: clamp(1.5rem, 3vw, 2rem); 
+  }
+}
+
+// Стили для иконки-эмодзи
+.icon {
+  // Строчно-блочное отображение
+  display: inline-block; 
+  // Внешний отступ справа (отступ от текста)
+  margin-right: $spacing-xs; 
+  // Нормальный стиль шрифта (без наклона)
+  font-style: normal;
+  // Бесконечная анимация "мерцания" продолжительностью 3 секунды
+  animation: sparkle 3s ease-in-out infinite;
+  // Отключение анимации для пользователей с настройкой reduced motion
+  @media (prefers-reduced-motion: reduce) { 
+    animation: none; 
+  }
+}
+
+// Стили для подзаголовка
+.subtitle {
+  /* transition – ДО @media */
+  // Плавные переходы для прозрачности и трансформации
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  // Адаптивный размер шрифта
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  // Обычная жирность шрифта
+  font-weight: 400; 
+  // Высота строки
+  line-height: 1.5; 
+  // Убираем внешние отступы
+  margin: 0; 
+  // Начальная прозрачность 80%
+  opacity: 0.8;
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) { 
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark; 
+  }
+
+  // Стили для подзаголовка когда header в состоянии scrolled
+  .header.scrolled & { 
+    // Уменьшенная прозрачность (60%)
+    opacity: 0.6; 
+    // Легкое смещение вверх на 2px
+    transform: translateY(-2px); 
+  }
+}
+
+// Keyframes анимации "мерцания" для иконки
+@keyframes sparkle {
+  // Начало и конец анимации
+  0%, 100% { 
+    // Нормальный масштаб и без вращения
+    transform: scale(1) rotate(0deg); 
+  }
+  // Середина анимации (50%)
+  50% { 
+    // Увеличенный масштаб и небольшой поворот
+    transform: scale(1.1) rotate(5deg); 
+  }
+}
+
+
+
+
+

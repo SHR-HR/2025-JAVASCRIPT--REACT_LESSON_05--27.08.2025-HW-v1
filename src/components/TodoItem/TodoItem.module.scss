@@ -1,0 +1,324 @@
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use '../../styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use '../../styles/mixins' as *;
+
+// Основной класс для карточки задачи
+.todoItem {
+  // Сначала декларации
+  // Плавный переход для всех свойств с пользовательской timing-функцией
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // Курсор по умолчанию (не кликабельный)
+  cursor: default;
+  // Анимация должна быть до вложенных правил
+  // Анимация появления карточки (снизу вверх)
+  animation: slideInUp 0.5s ease-out backwards;
+
+  // Для пользователей с настройкой reduced motion (уменьшенная анимация)
+  @media (prefers-reduced-motion: reduce) {
+    // Отключаем анимацию
+    animation: none;
+  }
+
+  // Затем вложенные правила (hover и т.п.)
+  // Стили при наведении курсора на карточку
+  &:hover {
+    // Смещение карточки вверх на 4px
+    transform: translateY(-4px);
+    // Увеличенная тень для светлой темы
+    box-shadow: $shadow-xl-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Увеличенная тень для темной темы
+      box-shadow: $shadow-xl-dark;
+    }
+  }
+
+  // Каскадная задержка анимации для последовательного появления карточек
+  // Цикл для 20 дочерних элементов
+  @for $i from 1 through 20 {
+    // Для каждого n-ного child применяем разную задержку анимации
+    &:nth-child(#{$i}) {
+      // Задержка анимации увеличивается с каждым элементом
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+// === HEADER СЕКЦИЯ === (Верхняя часть карточки)
+.header {
+  // Flexbox для горизонтального расположения элементов
+  display: flex;
+  // Распределение пространства между элементами
+  justify-content: space-between;
+  // Выравнивание элементов по началу (по вертикали)
+  align-items: flex-start;
+  // Внешний отступ снизу
+  margin-bottom: $spacing-md;
+  // Расстояние между элементами
+  gap: $spacing-sm;
+}
+
+// Стили для бейджа статуса
+.statusBadge {
+  // Запрещаем сжатие элемента (сохраняет размер)
+  flex-shrink: 0;
+}
+
+// Контейнер для мета-информации (ID и пользователь)
+.meta {
+  // Flexbox в колонку
+  display: flex;
+  flex-direction: column;
+  // Выравнивание элементов по концу (по горизонтали)
+  align-items: flex-end;
+  // Расстояние между элементами
+  gap: $spacing-xs;
+  // Уменьшенный размер шрифта
+  font-size: 0.75rem;
+  // Полупрозрачность
+  opacity: 0.7;
+}
+
+// Стили для отображения ID задачи
+.id {
+  // Моноширинный шрифт для цифр
+  font-family: 'Fira Code', monospace;
+  // Средняя жирность шрифта
+  font-weight: 500;
+  // Цвет для светлой темы
+  color: $primary-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет для темной темы
+    color: $primary-dark;
+  }
+}
+
+// Стили для отображения информации о пользователе
+.user {
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark;
+  }
+}
+
+// === CONTENT СЕКЦИЯ === (Основное содержимое карточки)
+.content {
+  // Внешний отступ снизу
+  margin-bottom: $spacing-lg;
+}
+
+// Стили для заголовка задачи
+.title {
+  // ВСЕ декларации — до @media
+  // Размер шрифта
+  font-size: 1rem;
+  // Средняя жирность шрифта
+  font-weight: 500;
+  // Высота строки
+  line-height: 1.5;
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+  // Убираем внешние отступы
+  margin: 0;
+
+  // Мультистрочное обрезание — держим декларации рядом
+  // Включение flex-контейнера для WebKit
+  display: -webkit-box;
+  // Вертикальная ориентация контейнера
+  -webkit-box-orient: vertical;
+  // Ограничение в 3 строки (то, на что ругался сборщик)
+  -webkit-line-clamp: 3;
+  // Современный алиас для ограничения строк
+  line-clamp: 3;
+  // Скрываем переполнение
+  overflow: hidden;
+
+  // Улучшение читаемости
+  // Перенос длинных слов
+  word-wrap: break-word;
+  // Автоматическое добавление переносов
+  hyphens: auto;
+
+  // И только потом — вложенные правила
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет текста для темной темы
+    color: $text-primary-dark;
+  }
+}
+
+// === FOOTER СЕКЦИЯ === (Нижняя часть карточки)
+.footer {
+  // Верхняя граница с прозрачностью 10%
+  border-top: 1px solid rgba($border-light, 0.1);
+  // Внутренний отступ сверху
+  padding-top: $spacing-md;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Граница для темной темы
+    border-color: rgba($border-dark, 0.1);
+  }
+}
+
+// Контейнер для статуса
+.status {
+  // Flexbox для центрирования элементов
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Индикатор статуса (точка + текст)
+.indicator {
+  // Flexbox для горизонтального расположения
+  display: flex;
+  align-items: center;
+  // Расстояние между точкой и текстом
+  gap: $spacing-sm;
+  // Уменьшенный размер шрифта
+  font-size: 0.75rem;
+  // Средняя жирность шрифта
+  font-weight: 500;
+  // Плавный переход для всех свойств
+  transition: all 0.2s ease;
+}
+
+// Точечный индикатор статуса
+.dot {
+  // Размеры точки
+  width: 8px;
+  height: 8px;
+  // Круглая форма
+  border-radius: 50%;
+  // Запрещаем сжатие элемента
+  flex-shrink: 0;
+  // Анимация пульсации для невыполненных задач
+  animation: pulse 2s ease-in-out infinite;
+
+  // Для пользователей с reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    // Отключаем анимацию
+    animation: none;
+  }
+}
+
+// Текстовое описание статуса
+.text {
+  // Цвет текста для светлой темы (вторичный)
+  color: $text-secondary-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет текста для темной темы (вторичный)
+    color: $text-secondary-dark;
+  }
+}
+
+// Стили для выполненных задач
+.completed {
+  // Стили для точки выполненных задач
+  .dot {
+    // Цвет точки для светлой темы
+    background: $success-light;
+    // Отключаем анимацию пульсации
+    animation: none;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Цвет точки для темной темы
+      background: $success-dark;
+    }
+  }
+
+  // Стили для текста выполненных задач
+  .text {
+    // Цвет текста для светлой темы
+    color: $success-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Цвет текста для темной темы
+      color: $success-dark;
+    }
+  }
+}
+
+// Стили для невыполненных задач
+.pending {
+  // Стили для точки невыполненных задач
+  .dot {
+    // Цвет точки для светлой темы
+    background: $warning-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Цвет точки для темной темы
+      background: $warning-dark;
+    }
+  }
+
+  // Стили для текста невыполненных задач
+  .text {
+    // Цвет текста для светлой темы
+    color: $warning-light;
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Цвет текста для темной темы
+      color: $warning-dark;
+    }
+  }
+}
+
+// === АНИМАЦИИ ===
+
+// Keyframes анимации появления карточки (снизу вверх)
+@keyframes slideInUp {
+  // Начальное состояние
+  from {
+    // Полная прозрачность
+    opacity: 0;
+    // Смещение вниз на 30px и уменьшенный масштаб
+    transform: translateY(30px) scale(0.95);
+  }
+  // Конечное состояние
+  to {
+    // Полная непрозрачность
+    opacity: 1;
+    // Нормальное положение и масштаб
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Keyframes анимации пульсации для невыполненных задач
+@keyframes pulse {
+  // Начало и конец анимации
+  0%, 100% {
+    // Полная непрозрачность
+    opacity: 1;
+    // Нормальный масштаб
+    transform: scale(1);
+  }
+  // Середина анимации
+  50% {
+    // Полупрозрачность
+    opacity: 0.7;
+    // Увеличенный масштаб
+    transform: scale(1.1);
+  }
+}
+
+
+
+
+
+

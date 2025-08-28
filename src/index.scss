@@ -1,0 +1,309 @@
+// Импортируем функции Sass для работы с цветами
+@use 'sass:color';
+// Импортируем файл с токенами (переменными) для использования в стилях
+@use 'styles/tokens' as *;
+// Импортируем файл с миксинами для повторного использования стилей
+@use 'styles/mixins' as *;
+
+/* === RESET === (Сброс стилей по умолчанию) */
+// Применяем border-box ко всем элементам и их псевдоэлементам
+*, *::before, *::after { box-sizing: border-box; }
+// Убираем внешние и внутренние отступы у всех элементов
+* { margin: 0; padding: 0; }
+
+// Стили для html элемента
+html {
+  // Плавная прокрутка страницы
+  scroll-behavior: smooth;
+
+  // Для пользователей с настройкой reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    // Отключаем плавную прокрутку
+    scroll-behavior: auto;
+  }
+}
+
+// Стили для body элемента
+body {
+  // Основное семейство шрифтов
+  font-family: $font-sans;
+  // Базовый размер шрифта
+  font-size: $text-base;
+  // Обычная жирность шрифта
+  font-weight: $font-normal;
+  // Нормальная высота строки
+  line-height: $leading-normal;
+
+  /* Перенесено ДО @media */
+  // Сглаживание шрифтов в WebKit-браузерах
+  -webkit-font-smoothing: antialiased;
+  // Сглаживание шрифтов в Firefox
+  -moz-osx-font-smoothing: grayscale;
+  // Оптимизация читаемости текста
+  text-rendering: optimizeLegibility;
+
+  /* layout */
+  // Минимальная высота на весь viewport (старая версия)
+  min-height: 100vh;
+  // Минимальная высота на весь viewport (новая версия с учетом динамического viewport)
+  min-height: 100dvh;
+
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+  // Градиентный фон для светлой темы
+  background: $gradient-bg-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет текста для темной темы
+    color: $text-primary-dark;
+    // Градиентный фон для темной темы
+    background: $gradient-bg-dark;
+  }
+}
+
+// Сброс стилей для элементов форм
+button, input, textarea, select { 
+  // Наследование шрифта и цвета
+  font: inherit; 
+  color: inherit; 
+}
+// Дополнительные стили для кнопок
+button { 
+  // Прозрачный фон
+  background: none; 
+  // Убираем стандартную границу
+  border: none; 
+  // Курсор в виде указателя
+  cursor: pointer; 
+}
+
+// Стили для элементов в фокусе (доступность)
+:focus-visible { 
+  // Применяем кастомное кольцо фокуса
+  @include focus-ring; 
+}
+// Убираем outline у элементов которые не в фокусе
+:focus:not(:focus-visible) { 
+  outline: none; 
+}
+
+/* === LAYOUT === (Основная разметка) */
+// Стили для корневого элемента React и основного контейнера приложения
+#root, .app {
+  // Flexbox контейнер в колонку
+  display: flex;
+  flex-direction: column;
+  // Минимальная высота на весь экран
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+// Стили для основного контента
+.main {
+  // Занимает все доступное пространство
+  flex: 1;
+  // Вертикальные отступы
+  padding: $spacing-xl 0;
+
+  // Для маленьких экранов
+  @media (max-width: $breakpoint-sm) {
+    // Уменьшенные вертикальные отступы
+    padding: $spacing-lg 0;
+  }
+}
+
+// Класс контейнера для центрирования контента
+.container { 
+  // Применяем миксин контейнера
+  @include container; 
+}
+
+/* === UTILS === (Вспомогательные классы) */
+// Класс для визуального скрытия элементов (сохраняя доступность)
+.visuallyHidden { 
+  @include visually-hidden; 
+}
+// Класс для обрезания текста с многоточием
+.truncate { 
+  @include truncate; 
+}
+
+/* === TYPOGRAPHY === (Типографика) */
+// Стили для всех заголовков
+h1, h2, h3, h4, h5, h6 {
+  // Полужирное начертание
+  font-weight: $font-semibold;
+  // Плотная высота строки
+  line-height: $leading-tight;
+  // Убираем внешние отступы
+  margin: 0;
+}
+// Размеры заголовков
+h1 { font-size: $text-4xl; }    // Очень крупный заголовок
+h2 { font-size: $text-3xl; }    // Крупный заголовок
+h3 { font-size: $text-2xl; }    // Большой заголовок
+h4 { font-size: $text-xl; }     // Заголовок
+h5 { font-size: $text-lg; }     // Подзаголовок
+h6 { font-size: $text-base; }   // Мелкий заголовок
+// Стили для параграфов
+p { 
+  // Убираем внешние отступы
+  margin: 0; 
+  // Нормальная высота строки
+  line-height: $leading-normal; 
+}
+// Стили для кода и преформатированного текста
+code, pre { 
+  // Моноширинный шрифт
+  font-family: $font-mono; 
+}
+
+/* === LISTS === (Списки) */
+// Убираем маркеры у списков
+ul, ol { 
+  list-style: none; 
+}
+
+/* === LINKS === (Ссылки) */
+// Базовые стили для ссылок
+a {
+  // Цвет ссылок для светлой темы
+  color: $primary-light;
+  // Убираем подчеркивание
+  text-decoration: none;
+  // Плавный переход для цвета
+  transition: color $duration-normal $ease-out;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет ссылок для темной темы
+    color: $primary-dark;
+  }
+
+  // Эффект при наведении на ссылку
+  &:hover {
+    // Добавляем подчеркивание
+    text-decoration: underline;
+    /* Заменили darken/lighten на color.adjust для лучшей совместимости */
+    // Затемняем цвет на 10% для светлой темы
+    color: color.adjust($primary-light, $lightness: -10%);
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Осветляем цвет на 10% для темной темы
+      color: color.adjust($primary-dark, $lightness: 10%);
+    }
+  }
+}
+
+/* === MEDIA === (Медиа-элементы) */
+// Стили для изображений, видео и SVG
+img, video, svg { 
+  // Блочное отображение
+  display: block; 
+  // Максимальная ширина 100%
+  max-width: 100%; 
+  // Автоматическая высота для сохранения пропорций
+  height: auto; 
+}
+
+/* === SELECTION === (Выделение текста) */
+// Стили для выделенного текста
+::selection {
+  // Фон выделения для светлой темы
+  background: rgba($primary-light, 0.3);
+  // Цвет текста для светлой темы
+  color: $text-primary-light;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Фон выделения для темной темы
+    background: rgba($primary-dark, 0.3);
+    // Цвет текста для темной темы
+    color: $text-primary-dark;
+  }
+}
+
+/* === SCROLLBAR === (Кастомизация скроллбара) */
+// Стили для WebKit-скроллбара
+::-webkit-scrollbar { 
+  // Ширина скроллбара
+  width: 8px; 
+}
+// Дорожка скроллбара
+::-webkit-scrollbar-track { 
+  // Прозрачный фон
+  background: transparent; 
+}
+// Бегунок скроллбара
+::-webkit-scrollbar-thumb {
+  // Цвет бегунка для светлой темы
+  background: rgba($gray-400, 0.5);
+  // Полное скругление углов
+  border-radius: $radius-full;
+
+  // Для темной темы
+  @media (prefers-color-scheme: dark) {
+    // Цвет бегунка для темной темы
+    background: rgba($dark-400, 0.5);
+  }
+
+  // Эффект при наведении на бегунок
+  &:hover {
+    // Более насыщенный цвет для светлой темы
+    background: rgba($gray-500, 0.7);
+
+    // Для темной темы
+    @media (prefers-color-scheme: dark) {
+      // Более насыщенный цвет для темной темы
+      background: rgba($dark-500, 0.7);
+    }
+  }
+}
+
+/* === MOTION REDUCE === (Уменьшение движения) */
+// Для пользователей с настройкой reduced motion
+@media (prefers-reduced-motion: reduce) {
+  // Отключаем анимации и переходы
+  *, *::before, *::after {
+    // Минимальная длительность анимаций
+    animation-duration: 0.01ms !important;
+    // Одна итерация анимаций
+    animation-iteration-count: 1 !important;
+    // Минимальная длительность переходов
+    transition-duration: 0.01ms !important;
+    // Отключаем плавную прокрутку
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === PRINT === (Стили для печати) */
+// Медиа-запрос для печати
+@media print {
+  // Стили для всех элементов при печати
+  * {
+    // Прозрачный фон
+    background: transparent !important;
+    // Черный текст
+    color: black !important;
+    // Убираем тени
+    box-shadow: none !important;
+  }
+  // Стили для ссылок при печати
+  a, a:visited { 
+    // Подчеркивание ссылок
+    text-decoration: underline; 
+  }
+  // Скрываем элементы с классом no-print
+  .no-print { 
+    display: none !important; 
+  }
+}
+
+
+
+
+
+
+
